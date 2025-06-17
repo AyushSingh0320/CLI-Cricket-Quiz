@@ -1,4 +1,5 @@
 let readlineSync = require("readline-sync")
+const fs = require('fs')
 let score = 0
 let username = readlineSync.question("What's your good name -")
 const database  = {
@@ -97,31 +98,35 @@ const database  = {
     ]
 }
 
+// Initialize leaderboard from file or use default data
 let leaderboard = {
-    Data : [
+    Data: []
+}
+
+try {
+    const data = fs.readFileSync('leaderboard.json', 'utf8')
+    leaderboard.Data = JSON.parse(data)
+} catch (err) {
+    // If file doesn't exist or is invalid, use default data
+    leaderboard.Data = [
         {
-            Name : "Ayush",
-            score : "2"
+            Name: "Ayush",
+            score: "2"
         },
         {
-            Name : "Sahil",
-            score : "6"
+            Name: "Sahil",
+            score: "6"
         },
         {
-            Name : "Chirag",
-            score : "4"
+            Name: "Chirag",
+            score: "4"
         },
         {
-            Name : "Raj",
-            score : "5"
-        },
-        {
-            Name : "Ram",
-            score : "3"
+            Name: "Raj",
+            score: "5"
         }
     ]
 }
-
 
 function playagame(useranswer , correctanswer){
     if(useranswer == correctanswer){
@@ -146,24 +151,27 @@ function showallquestions(database){
     }
 }
 
-function ShowHighscorer(leaderboard){
-    leaderboard.Data.push({Name : username , score : score})
-    let sortedarray = leaderboard.Data.sort((a , b) => b.score - a.score)
-    console.log("\nUpdated leaderborad\n")
-
-
-    for(let leader of sortedarray){
+function ShowHighscorer(leaderboard) {
+    // Add current user's score
+    leaderboard.Data.push({Name: username, score: score.toString()})
     
-        // let result = console.log(i)
-        console.log( `${leader.Name} - Score ${leader.score}`);
+    // Sort the leaderboard
+    let sortedarray = leaderboard.Data.sort((a, b) => parseInt(b.score) - parseInt(a.score))
+    
+    // Store updated leaderboard in file
+    fs.writeFileSync('leaderboard.json', JSON.stringify(sortedarray, null, 2))
+    
+    console.log("\nUpdated leaderboard\n")
+    for(let leader of sortedarray) {
+        console.log(`${leader.Name} - Score ${leader.score}`);
     }
 }
+
 function congratulationmsg(yourscore , currenthighscore){
     if (yourscore >= currenthighscore ){
         console.log("\ncongratulations you are the New Leader in Leaderboard")
     }
 }
-
 
 showallquestions(database);
 console.log(`\nYour score is - ${score}`)
