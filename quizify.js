@@ -113,18 +113,6 @@ try {
             Name: "Ayush",
             score: "2"
         },
-        {
-            Name: "Sahil",
-            score: "6"
-        },
-        {
-            Name: "Chirag",
-            score: "4"
-        },
-        {
-            Name: "Raj",
-            score: "5"
-        }
     ]
 }
 
@@ -155,8 +143,15 @@ function ShowHighscorer(leaderboard) {
     // Add current user's score
     leaderboard.Data.push({Name: username, score: score.toString()})
     
+    // Filter out entries with invalid names (empty or non-string)
+    let validEntries = leaderboard.Data.filter(entry => 
+        entry.Name && 
+        typeof entry.Name === 'string' && 
+        entry.Name.trim().length > 0
+    );
+    
     // Sort the leaderboard
-    let sortedarray = leaderboard.Data.sort((a, b) => parseInt(b.score) - parseInt(a.score))
+    let sortedarray = validEntries.sort((a, b) => parseInt(b.score) - parseInt(a.score))
     
     // Store updated leaderboard in file
     fs.writeFileSync('leaderboard.json', JSON.stringify(sortedarray, null, 2))
