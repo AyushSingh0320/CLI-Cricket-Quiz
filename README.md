@@ -4,10 +4,8 @@ A command-line based cricket quiz application built with Node.js that tests your
 
 ## Features
 
-- Interactive command-line interface
 - Cricket-themed questions covering various aspects of the sport
 - Real-time score tracking
-- Persistent leaderboard system
 - Immediate feedback on answers
 - Congratulations message for new high scores
 
